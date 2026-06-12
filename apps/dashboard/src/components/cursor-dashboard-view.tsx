@@ -115,9 +115,9 @@ export function CursorDashboardView() {
             <p className="font-medium text-red-300">Could not load Cursor data</p>
             <p className="mt-2 text-sm text-[var(--color-muted)]">{error}</p>
             <p className="mt-2 text-xs text-[var(--color-muted)]">
-              Ensure CURSOR_SESSION_TOKEN is set in apps/api/.env and is not expired. For screenshots,
-              run <code className="text-violet-300">npm run screenshot:cursor</code> with the
-              dashboard and API running.
+              Ensure the API has <code className="text-violet-300">CURSOR_SESSION_TOKEN</code> set,
+              <code className="text-violet-300"> API_URL</code> points at the API on Railway, and the
+              session cookie is not expired.
             </p>
           </div>
         ) : loading && !data ? (

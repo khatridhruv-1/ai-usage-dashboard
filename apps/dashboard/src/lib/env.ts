@@ -14,8 +14,7 @@ export function getApiBaseUrl(): string {
   return normalizeUrl(raw);
 }
 
-/** Client-side: NEXT_PUBLIC_API_URL is inlined at build time. */
+/** Browser calls: same-origin proxy (runtime API_URL on the server). */
 export function getApiBaseUrlClient(): string {
-  const raw = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-  return normalizeUrl(raw);
+  return "/proxy-api";
 }
