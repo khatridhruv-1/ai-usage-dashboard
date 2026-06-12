@@ -210,7 +210,7 @@ See **[TEAM_SETUP.md](./TEAM_SETUP.md)** for full host vs teammate steps.
 
 `R2_*` and `GOOGLE_CHAT_WEBHOOK_URL` on Railway are **host-only** (shared R2 bucket, per-user folders).
 
-Workflow: `.github/workflows/cursor-report.yml` — Mon–Fri 7:30 PM IST. Test via **Actions → Cursor Usage Report → Run workflow**.
+Workflow: `.github/workflows/cursor-report.yml` — Mon–Fri ~7:35 PM IST. Test via **Actions → Cursor Usage Report → Run workflow**.
 
 ## Release Phases
 

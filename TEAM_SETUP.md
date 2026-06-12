@@ -51,7 +51,7 @@ You do **not** need `CURSOR_SESSION_TOKEN` on Railway unless you use the live da
 | `GOOGLE_CHAT_WEBHOOK_URL` | Your Google Chat space webhook |
 
 3. **Actions → Cursor Usage Report → Run workflow** to test.
-4. Scheduled runs: **Mon–Fri 7:30 PM IST** automatically.
+4. Scheduled runs: **Mon–Fri ~7:35 PM IST** automatically (GitHub may start the job a few minutes late).
 
 No Railway, no R2, no database setup required.
 

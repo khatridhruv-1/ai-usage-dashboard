@@ -2,8 +2,8 @@ name: Cursor Usage Report
 
 on:
   schedule:
-    # 7:30 PM IST Mon–Fri = 14:00 UTC
-    - cron: "0 14 * * 1-5"
+    # ~7:35 PM IST Mon–Fri = 14:05 UTC (minute offset avoids GitHub :00 queue delays)
+    - cron: "5 14 * * 1-5"
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify Mon–Fri 7:30 PM IST schedule
+      - name: Verify Mon–Fri evening IST schedule
         run: bash scripts/verify-ist-schedule.sh cursor
 
       - name: Load shared host URLs
