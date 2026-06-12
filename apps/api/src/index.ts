@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import { getR2ConfigStatus } from "./services/r2.js";
 
 process.on("uncaughtException", (err) => {
   console.error("[api] uncaughtException:", err);
@@ -14,7 +15,7 @@ const PORT = Number(process.env.PORT ?? process.env.API_PORT ?? 4000);
 const HOST = process.env.HOST ?? "0.0.0.0";
 
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, service: "ai-usage-api" });
+  res.json({ ok: true, service: "ai-usage-api", r2: getR2ConfigStatus() });
 });
 
 app.listen(PORT, HOST, () => {

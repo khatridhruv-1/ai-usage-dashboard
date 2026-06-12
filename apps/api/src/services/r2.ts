@@ -1,13 +1,27 @@
 import { readFile } from "fs/promises";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
+const R2_ENV_KEYS = [
+  "R2_ACCOUNT_ID",
+  "R2_ACCESS_KEY_ID",
+  "R2_SECRET_ACCESS_KEY",
+  "R2_BUCKET_NAME",
+  "R2_PUBLIC_URL",
+] as const;
+
+export function getR2ConfigStatus() {
+  const missing = R2_ENV_KEYS.filter((key) => !process.env[key]?.trim());
+  return { configured: missing.length === 0, missing };
+}
+
 export function isR2Configured(): boolean {
-  return Boolean(
-    process.env.R2_ACCOUNT_ID &&
-      process.env.R2_ACCESS_KEY_ID &&
-      process.env.R2_SECRET_ACCESS_KEY &&
-      process.env.R2_BUCKET_NAME &&
-      process.env.R2_PUBLIC_URL,
+  return getR2ConfigStatus().configured;
+}
+
+function r2NotConfiguredError(): Error {
+  const { missing } = getR2ConfigStatus();
+  return new Error(
+    `R2 is not fully configured. Missing on API service: ${missing.join(", ")}`,
   );
 }
 
@@ -52,7 +66,7 @@ export async function uploadScreenshotToR2(opts: {
   const publicBase = process.env.R2_PUBLIC_URL;
 
   if (!client || !bucket || !publicBase) {
-    throw new Error("R2 is not fully configured (R2_ACCOUNT_ID, R2_BUCKET_NAME, R2_PUBLIC_URL)");
+    throw r2NotConfiguredError();
   }
 
   let body: Buffer;
@@ -87,7 +101,7 @@ export async function uploadCursorScreenshotToR2(opts: {
   const publicBase = process.env.R2_PUBLIC_URL;
 
   if (!client || !bucket || !publicBase) {
-    throw new Error("R2 is not fully configured (R2_ACCOUNT_ID, R2_BUCKET_NAME, R2_PUBLIC_URL)");
+    throw r2NotConfiguredError();
   }
 
   let body: Buffer;
