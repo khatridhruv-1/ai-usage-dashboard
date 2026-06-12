@@ -7,7 +7,7 @@ import {
 } from "@repo/analytics";
 import { prisma } from "@repo/db";
 import { requireInternalToken } from "../middleware/auth";
-import { uploadScreenshotToR2 } from "../services/r2";
+import { isR2Configured, uploadScreenshotToR2 } from "../services/r2";
 import { sendGoogleChatReport } from "../services/google-chat";
 
 export const reportRouter: Router = Router();
@@ -38,8 +38,9 @@ reportRouter.post("/generate", requireInternalToken, async (req, res) => {
       },
     });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to generate report";
     console.error(err);
-    res.status(500).json({ error: "Failed to generate report" });
+    res.status(500).json({ error: message });
   }
 });
 
@@ -51,16 +52,20 @@ reportRouter.post("/complete", requireInternalToken, async (req, res) => {
 
     let screenshotUrl: string | undefined;
     if (screenshotBase64 || screenshotPath) {
-      screenshotUrl = await uploadScreenshotToR2({
-        date,
-        base64: screenshotBase64,
-        filePath: screenshotPath,
-      });
-      const reportDate = parseReportDate(dateParam);
-      await prisma.dailyReport.update({
-        where: { date: reportDate },
-        data: { screenshotUrl },
-      });
+      if (isR2Configured()) {
+        screenshotUrl = await uploadScreenshotToR2({
+          date,
+          base64: screenshotBase64,
+          filePath: screenshotPath,
+        });
+        const reportDate = parseReportDate(dateParam);
+        await prisma.dailyReport.update({
+          where: { date: reportDate },
+          data: { screenshotUrl },
+        });
+      } else {
+        console.warn("[report] R2 not configured — skipping screenshot upload");
+      }
     }
 
     const reportDate = parseReportDate(dateParam);
@@ -84,7 +89,8 @@ reportRouter.post("/complete", requireInternalToken, async (req, res) => {
       chatSent: Boolean(process.env.GOOGLE_CHAT_WEBHOOK_URL),
     });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to complete report pipeline";
     console.error(err);
-    res.status(500).json({ error: "Failed to complete report pipeline" });
+    res.status(500).json({ error: message });
   }
 });
