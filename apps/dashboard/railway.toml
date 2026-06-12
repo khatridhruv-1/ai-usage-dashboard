@@ -1,7 +1,8 @@
 [build]
-builder = "nixpacks"
-buildCommand = "npm ci && npm exec --workspace=@repo/db prisma generate && npm run build --workspace=dashboard"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile.dashboard"
 
 [deploy]
-startCommand = "npm run start --workspace=dashboard"
+healthcheckPath = "/"
+healthcheckTimeout = 180
 restartPolicyType = "on_failure"
