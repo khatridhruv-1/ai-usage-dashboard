@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { fetchDailyUsage } from "@/lib/api";
 import { isReportAuthorized } from "@/lib/report-auth";
 import { ReportLayout } from "@/components/report-layout";
@@ -10,8 +11,9 @@ type Props = {
 
 export default async function DailyReportPage({ searchParams }: Props) {
   const params = await searchParams;
+  const requestHeaders = await headers();
 
-  if (!isReportAuthorized(params)) {
+  if (!isReportAuthorized(params, requestHeaders)) {
     return (
       <div className="report-viewport flex items-center justify-center">
         <p className="text-[var(--color-muted)]">Unauthorized — invalid report token</p>

@@ -39,12 +39,14 @@ function defaultOutputPath() {
 export async function captureCursorReport(): Promise<string> {
   const reportUrl = buildCursorReportUrl();
   const outputPath = defaultOutputPath();
+  const internalToken = process.env.INTERNAL_API_TOKEN?.trim();
 
   console.log("Opening Cursor report:", reportUrl);
 
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({
     viewport: { width: VIEWPORT_WIDTH, height: 900 },
+    extraHTTPHeaders: internalToken ? { "x-internal-token": internalToken } : undefined,
   });
 
   try {
