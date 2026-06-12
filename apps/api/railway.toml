@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm ci && npm run build --workspace=api"
+
+[deploy]
+startCommand = "npm run start --workspace=api"
+restartPolicyType = "on_failure"

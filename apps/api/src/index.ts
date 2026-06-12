@@ -9,7 +9,7 @@ import { cursorRouter } from "./routes/cursor";
 import { runStartupSync, startSyncScheduler } from "./services/scheduler";
 
 const app = express();
-const PORT = Number(process.env.API_PORT ?? 4000);
+const PORT = Number(process.env.PORT ?? process.env.API_PORT ?? 4000);
 
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(",") ?? true }));
 app.use(express.json());

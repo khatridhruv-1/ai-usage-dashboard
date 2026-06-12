@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm ci && npm exec --workspace=@repo/db prisma generate && npm run build --workspace=dashboard"
+
+[deploy]
+startCommand = "npm run start --workspace=dashboard"
+restartPolicyType = "on_failure"

@@ -1,8 +1,7 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
 function resolveWorkerDir(): string {
   const fromEnv = process.env.SCREENSHOT_WORKER_DIR?.trim();
@@ -12,7 +11,6 @@ function resolveWorkerDir(): string {
     join(process.cwd(), "apps/screenshot-worker"),
     join(process.cwd(), "../screenshot-worker"),
     join(process.cwd(), "screenshot-worker"),
-    join(dirname(fileURLToPath(import.meta.url)), "../../../screenshot-worker"),
   ];
 
   const found = candidates.find((dir) => existsSync(join(dir, "package.json")));
