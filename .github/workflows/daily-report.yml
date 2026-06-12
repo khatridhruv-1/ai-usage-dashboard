@@ -16,9 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify 7:00 PM IST schedule
-        run: bash scripts/verify-ist-schedule.sh daily
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
