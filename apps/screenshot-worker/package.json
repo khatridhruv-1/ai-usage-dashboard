@@ -1,0 +1,23 @@
+{
+  "name": "screenshot-worker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "capture": "tsx src/run-capture.ts",
+    "capture:cursor": "tsx src/run-capture-cursor.ts",
+    "cursor-pipeline": "tsx src/run-cursor-pipeline.ts",
+    "generate": "tsx src/generate-report.ts",
+    "schedule": "tsx src/scheduler.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "node-cron": "^3.0.3",
+    "playwright": "^1.52.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

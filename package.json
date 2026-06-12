@@ -1,0 +1,29 @@
+{
+  "name": "ai-usage-dashboard",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "dev:api": "npm run dev --workspace=api",
+    "dev:dashboard": "npm run dev --workspace=dashboard",
+    "db:generate": "npm exec --workspace=@repo/db prisma generate",
+    "db:push": "npm exec --workspace=@repo/db prisma db push",
+    "db:seed": "npm exec --workspace=@repo/db tsx prisma/seed.ts",
+    "screenshot": "npm run capture --workspace=screenshot-worker",
+    "screenshot:cursor": "npm run capture:cursor --workspace=screenshot-worker",
+    "report:generate": "npm run generate --workspace=screenshot-worker",
+    "report:cursor": "npm run cursor-pipeline --workspace=screenshot-worker"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

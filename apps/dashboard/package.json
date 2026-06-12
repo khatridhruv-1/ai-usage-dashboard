@@ -1,0 +1,33 @@
+{
+  "name": "dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@repo/analytics": "*",
+    "@repo/collectors": "*",
+    "@repo/db": "*",
+    "@repo/ui": "*",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.12.3",
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^2.15.3",
+    "tailwind-merge": "^3.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.7",
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "tailwindcss": "^4.1.7",
+    "typescript": "^5.8.3"
+  }
+}

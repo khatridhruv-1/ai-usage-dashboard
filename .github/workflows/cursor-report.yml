@@ -1,0 +1,30 @@
+name: Cursor Usage Report
+
+on:
+  schedule:
+    # 7:30 PM IST Mon–Fri = 14:00 UTC
+    - cron: "0 14 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  cursor-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install chromium --with-deps
+
+      - name: Capture screenshot and post to Google Chat
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          DASHBOARD_URL: ${{ secrets.DASHBOARD_URL }}
+          INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
+          REPORT_ACCESS_TOKEN: ${{ secrets.REPORT_ACCESS_TOKEN }}
+        run: npm run report:cursor

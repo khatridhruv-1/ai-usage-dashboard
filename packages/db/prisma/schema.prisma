@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(cuid())
+  name       String
+  email      String      @unique
+  createdAt  DateTime    @default(now()) @map("created_at")
+  usageLogs  UsageLog[]
+
+  @@map("users")
+}
+
+model UsageLog {
+  id           String   @id @default(cuid())
+  provider     String
+  model        String
+  tokensInput  Int      @default(0) @map("tokens_input")
+  tokensOutput Int      @default(0) @map("tokens_output")
+  cost         Float    @default(0)
+  projectName  String?  @map("project_name")
+  userId       String?  @map("user_id")
+  user         User?    @relation(fields: [userId], references: [id])
+  externalId   String?  @unique @map("external_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([provider])
+  @@index([userId])
+  @@map("usage_logs")
+}
+
+model SyncState {
+  provider       String   @id
+  lastSyncedAt   DateTime? @map("last_synced_at")
+  lastSyncStatus String   @default("idle") @map("last_sync_status")
+  lastSyncError  String?  @map("last_sync_error")
+  recordsSynced  Int      @default(0) @map("records_synced")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("sync_states")
+}
+
+model DailyReport {
+  id            String   @id @default(cuid())
+  date          DateTime @unique @db.Date
+  totalTokens   Int      @default(0) @map("total_tokens")
+  totalCost     Float    @default(0) @map("total_cost")
+  screenshotUrl String?  @map("screenshot_url")
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("daily_reports")
+}

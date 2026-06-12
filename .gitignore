@@ -1,0 +1,14 @@
+node_modules
+.next
+dist
+.turbo
+.env
+.env.local
+**/.env
+**/.env.local
+!.env.example
+*.log
+daily-report.png
+cursor-report.png
+apps/screenshot-worker/cursor-report.png
+.DS_Store
