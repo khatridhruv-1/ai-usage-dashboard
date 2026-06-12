@@ -10,7 +10,8 @@ import { runStartupSync, startSyncScheduler } from "./services/scheduler";
 
 export function bootstrap(app: Express) {
   app.use(cors({ origin: process.env.CORS_ORIGIN?.split(",") ?? true }));
-  app.use(express.json());
+  // Full-page PNG screenshots are sent as base64 in report complete payloads
+  app.use(express.json({ limit: "25mb" }));
 
   app.use("/api/usage", usageRouter);
   app.use("/api/report", reportRouter);
