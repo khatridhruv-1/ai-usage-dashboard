@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { CursorReportCapture } from "@/components/cursor-report-capture";
-import { formatReportTimestamp } from "@/lib/datetime";
+import { formatReportTimestamp } from "@repo/analytics";
 import { fetchCursorDashboardServer } from "@/lib/cursor-api-server";
 import { isReportAuthorized } from "@/lib/report-auth";
 

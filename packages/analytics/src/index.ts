@@ -1,4 +1,11 @@
 import { prisma, type UsageLog } from "@repo/db";
+import {
+  endOfReportDay,
+  getCalendarPartsInTimezone,
+  getReportTimezone,
+  startOfDayInTimezone,
+  todayInReportTimezone,
+} from "./timezone";
 
 export type DailyUsageResponse = {
   date: string;
@@ -16,36 +23,43 @@ export type DailyUsageResponse = {
   topModel: string;
 };
 
-function startOfDay(d: Date) {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-
-function endOfDay(d: Date) {
-  const x = new Date(d);
-  x.setHours(23, 59, 59, 999);
-  return x;
-}
-
 function formatDate(d: Date) {
-  return d.toISOString().slice(0, 10);
+  const tz = getReportTimezone();
+  const { y, m, d: day } = getCalendarPartsInTimezone(d, tz);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${y}-${pad(m)}-${pad(day)}`;
 }
 
 export function parseReportDate(dateParam?: string): Date {
+  const tz = getReportTimezone();
+
   if (!dateParam || dateParam === "today") {
-    return startOfDay(new Date());
+    return todayInReportTimezone(tz);
   }
+
+  const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateParam.trim());
+  if (isoMatch) {
+    return startOfDayInTimezone(
+      Number(isoMatch[1]),
+      Number(isoMatch[2]),
+      Number(isoMatch[3]),
+      tz,
+    );
+  }
+
   const parsed = new Date(dateParam);
   if (Number.isNaN(parsed.getTime())) {
-    return startOfDay(new Date());
+    return todayInReportTimezone(tz);
   }
-  return startOfDay(parsed);
+
+  const { y, m, d } = getCalendarPartsInTimezone(parsed, tz);
+  return startOfDayInTimezone(y, m, d, tz);
 }
 
 export async function aggregateDailyUsage(date: Date): Promise<DailyUsageResponse> {
-  const dayStart = startOfDay(date);
-  const dayEnd = endOfDay(date);
+  const tz = getReportTimezone();
+  const dayStart = date;
+  const dayEnd = endOfReportDay(date, tz);
 
   const logs = await prisma.usageLog.findMany({
     where: { createdAt: { gte: dayStart, lte: dayEnd } },
@@ -70,7 +84,7 @@ export async function aggregateDailyUsage(date: Date): Promise<DailyUsageRespons
 
 export async function aggregateAndStoreDailyReport(date: Date) {
   const metrics = await aggregateDailyUsage(date);
-  const reportDate = startOfDay(date);
+  const reportDate = date;
 
   await prisma.dailyReport.upsert({
     where: { date: reportDate },
@@ -197,3 +211,10 @@ export function formatTokens(n: number): string {
 export function formatCost(n: number): string {
   return `$${n.toFixed(2)}`;
 }
+
+export {
+  DEFAULT_REPORT_TIMEZONE,
+  formatReportTimestamp,
+  getReportTimezone,
+  todayInReportTimezone,
+} from "./timezone";

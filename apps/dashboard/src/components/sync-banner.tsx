@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, Radio, AlertCircle } from "lucide-react";
+import { formatReportTimestamp } from "@repo/analytics";
 import { clientApiPath } from "@/lib/env";
 
 type SyncStatus = {
@@ -31,7 +32,7 @@ type SyncStatus = {
 
 function formatTime(iso: string | null) {
   if (!iso) return "Never";
-  return new Date(iso).toLocaleString();
+  return formatReportTimestamp(iso);
 }
 
 export function SyncBanner() {

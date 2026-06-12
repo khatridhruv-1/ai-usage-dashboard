@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { formatReportTimestamp } from "@repo/analytics";
 import {
   fetchCursorLiveDashboard,
   isCursorSessionConfigured,
@@ -92,9 +93,7 @@ cursorRouter.post("/report/complete", requireInternalToken, async (req, res) => 
         screenshotUrl,
         displayName: displayName || undefined,
         email,
-        generatedAt: generatedAt.toLocaleString("en-IN", {
-          timeZone: process.env.CRON_TIMEZONE ?? "Asia/Kolkata",
-        }),
+        generatedAt: formatReportTimestamp(generatedAt),
       });
       chatSent = true;
     }

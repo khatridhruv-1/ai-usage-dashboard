@@ -1,4 +1,4 @@
-import { formatCost, formatTokens } from "@repo/analytics";
+import { formatCost, formatReportTimestamp, formatTokens } from "@repo/analytics";
 
 type ReportPayload = {
   date: string;
@@ -29,6 +29,8 @@ export async function sendGoogleChatReport(payload: ReportPayload) {
   if (payload.screenshotUrl) {
     lines.push("", `📷 Full Dashboard: ${payload.screenshotUrl}`);
   }
+
+  lines.push("", `🕐 Generated: ${formatReportTimestamp(new Date())}`);
 
   const res = await fetch(webhookUrl, {
     method: "POST",
