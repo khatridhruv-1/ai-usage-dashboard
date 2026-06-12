@@ -7,9 +7,10 @@ import { CursorReportContent } from "./cursor-report-content";
 
 type Props = {
   data: CursorLiveDashboard;
+  generatedAtLabel: string;
 };
 
-export function CursorReportCapture({ data }: Props) {
+export function CursorReportCapture({ data, generatedAtLabel }: Props) {
   const [chartsReady, setChartsReady] = useState(false);
 
   useEffect(() => {
@@ -19,7 +20,6 @@ export function CursorReportCapture({ data }: Props) {
 
   const billingStart = data.summary.billingCycle.start;
   const billingEnd = data.summary.billingCycle.end;
-  const capturedAt = new Date(data.fetchedAt);
 
   return (
     <div className="report-cursor-capture relative flex flex-col gap-4 p-8">
@@ -30,7 +30,7 @@ export function CursorReportCapture({ data }: Props) {
         </h1>
         <p className="mt-1 text-sm text-[var(--color-muted)]">
           {membershipLabel(data.summary.membershipType)} plan · {formatShortDate(billingStart)} –{" "}
-          {formatShortDate(billingEnd)} · Generated {capturedAt.toLocaleString()}
+          {formatShortDate(billingEnd)} · Generated {generatedAtLabel}
         </p>
       </header>
 

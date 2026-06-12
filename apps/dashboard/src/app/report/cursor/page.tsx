@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { CursorReportCapture } from "@/components/cursor-report-capture";
+import { formatReportTimestamp } from "@/lib/datetime";
 import { fetchCursorDashboardServer } from "@/lib/cursor-api-server";
 import { isReportAuthorized } from "@/lib/report-auth";
 
@@ -29,7 +30,10 @@ export default async function CursorReportPage({ searchParams }: Props) {
     const data = await fetchCursorDashboardServer();
     return (
       <>
-        <CursorReportCapture data={data} />
+        <CursorReportCapture
+          data={data}
+          generatedAtLabel={formatReportTimestamp(data.fetchedAt)}
+        />
         <div className="report-ready report-ready-marker" />
       </>
     );
