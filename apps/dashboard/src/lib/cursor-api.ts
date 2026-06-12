@@ -1,10 +1,10 @@
 import type { CursorLiveDashboard } from "@repo/collectors";
-import { getApiBaseUrlClient } from "@/lib/env";
+import { clientApiPath } from "@/lib/env";
 
 export type { CursorLiveDashboard };
 
 export async function fetchCursorDashboard(): Promise<CursorLiveDashboard> {
-  const res = await fetch(`${getApiBaseUrlClient()}/api/cursor/dashboard`, { cache: "no-store" });
+  const res = await fetch(clientApiPath("/api/cursor/dashboard"), { cache: "no-store" });
   const body = await res.json();
   if (!res.ok) {
     throw new Error(body.error ?? `Failed to fetch Cursor dashboard (${res.status})`);

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, Radio, AlertCircle } from "lucide-react";
-import { getApiBaseUrlClient } from "@/lib/env";
+import { clientApiPath } from "@/lib/env";
 
 type SyncStatus = {
   liveDataEnabled: boolean;
@@ -41,7 +41,7 @@ export function SyncBanner() {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch(`${getApiBaseUrlClient()}/api/sync/status`);
+      const res = await fetch(clientApiPath("/api/sync/status"));
       if (res.ok) setStatus(await res.json());
     } catch {
       /* API offline */
@@ -62,7 +62,7 @@ export function SyncBanner() {
       const token = process.env.NEXT_PUBLIC_INTERNAL_API_TOKEN;
       if (token) headers["x-internal-token"] = token;
 
-      const res = await fetch(`${getApiBaseUrlClient()}/api/sync/run`, {
+      const res = await fetch(clientApiPath("/api/sync/run"), {
         method: "POST",
         headers,
         body: JSON.stringify({ clearSeed: true }),

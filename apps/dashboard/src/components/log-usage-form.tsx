@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, PenLine } from "lucide-react";
 
-import { getApiBaseUrlClient } from "@/lib/env";
+import { clientApiPath } from "@/lib/env";
 
 const PROVIDERS = [
   { value: "cursor", label: "Cursor" },
@@ -65,7 +65,7 @@ export function LogUsageForm() {
     if (userEmail.trim()) body.userEmail = userEmail.trim();
 
     try {
-      const res = await fetch(`${getApiBaseUrlClient()}/api/usage/log`, {
+      const res = await fetch(clientApiPath("/api/usage/log"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

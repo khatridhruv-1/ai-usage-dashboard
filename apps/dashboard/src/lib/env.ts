@@ -18,3 +18,9 @@ export function getApiBaseUrl(): string {
 export function getApiBaseUrlClient(): string {
   return "/proxy-api";
 }
+
+/** Map `/api/...` to `/proxy-api/...` (proxy adds `/api` when forwarding). */
+export function clientApiPath(apiPath: string): string {
+  const path = apiPath.replace(/^\/?api\//, "");
+  return `${getApiBaseUrlClient()}/${path}`;
+}

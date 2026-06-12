@@ -8,7 +8,7 @@ import {
   formatShortDate,
   membershipLabel,
 } from "@/lib/cursor-api";
-import { getApiBaseUrlClient } from "@/lib/env";
+import { clientApiPath } from "@/lib/env";
 import { CursorReportContent } from "./cursor-report-content";
 import { Sidebar } from "./sidebar";
 
@@ -53,7 +53,7 @@ export function CursorDashboardView() {
     setCapturing(true);
     setScreenshotError(null);
     try {
-      const res = await fetch(`${getApiBaseUrlClient()}/api/cursor/screenshot`);
+      const res = await fetch(clientApiPath("/api/cursor/screenshot"));
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? `Screenshot failed (${res.status})`);
