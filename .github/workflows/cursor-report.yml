@@ -2,8 +2,8 @@ name: Cursor Usage Report
 
 on:
   schedule:
-    # ~7:35 PM IST Mon–Fri = 14:05 UTC (minute offset avoids GitHub :00 queue delays)
-    - cron: "5 14 * * 1-5"
+    # TEMP TEST: 10:30 PM IST Fri = 17:00 UTC — revert to "5 14 * * 1-5" after test
+    - cron: "0 17 * * 5"
   workflow_dispatch:
 
 jobs:
