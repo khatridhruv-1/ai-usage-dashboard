@@ -15,8 +15,8 @@ export function getSessionToken() {
   return process.env.CURSOR_SESSION_TOKEN?.trim();
 }
 
-export function cursorCookie(): string | null {
-  const token = getSessionToken();
+export function cursorCookie(sessionToken?: string): string | null {
+  const token = sessionToken?.trim() || getSessionToken();
   if (!token) return null;
   if (token.includes("=")) return token;
   return `WorkosCursorSessionToken=${token}`;
@@ -40,9 +40,10 @@ export function resolveUserId(me: AuthMeResponse | null): number | undefined {
 export async function cursorSessionRequest<T>(
   method: "GET" | "POST",
   path: string,
-  body?: object
+  body?: object,
+  sessionToken?: string,
 ): Promise<T> {
-  const cookie = cursorCookie();
+  const cookie = cursorCookie(sessionToken);
   if (!cookie) {
     throw new Error(
       "CURSOR_SESSION_TOKEN is not set. Copy WorkosCursorSessionToken from cursor.com (DevTools → Application → Cookies)."
@@ -81,9 +82,9 @@ export async function cursorSessionRequest<T>(
   return res.json() as Promise<T>;
 }
 
-export async function fetchAuthMe(): Promise<AuthMeResponse | null> {
+export async function fetchAuthMe(sessionToken?: string): Promise<AuthMeResponse | null> {
   try {
-    return await cursorSessionRequest<AuthMeResponse>("GET", "/api/auth/me");
+    return await cursorSessionRequest<AuthMeResponse>("GET", "/api/auth/me", undefined, sessionToken);
   } catch {
     return null;
   }

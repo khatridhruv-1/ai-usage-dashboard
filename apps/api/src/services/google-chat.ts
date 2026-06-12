@@ -51,9 +51,11 @@ type CursorReportPayload = {
   generatedAt?: string;
 };
 
-export async function sendCursorGoogleChatReport(payload: CursorReportPayload) {
-  const webhookUrl = process.env.GOOGLE_CHAT_WEBHOOK_URL;
-  if (!webhookUrl) {
+export async function sendCursorGoogleChatReport(
+  payload: CursorReportPayload,
+  webhookUrl = process.env.GOOGLE_CHAT_WEBHOOK_URL,
+) {
+  if (!webhookUrl?.trim()) {
     throw new Error("GOOGLE_CHAT_WEBHOOK_URL is not configured");
   }
 

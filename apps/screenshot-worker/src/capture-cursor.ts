@@ -39,14 +39,25 @@ function defaultOutputPath() {
 export async function captureCursorReport(): Promise<string> {
   const reportUrl = buildCursorReportUrl();
   const outputPath = defaultOutputPath();
+  const extraHTTPHeaders: Record<string, string> = {};
   const internalToken = process.env.INTERNAL_API_TOKEN?.trim();
+  if (internalToken) extraHTTPHeaders["x-internal-token"] = internalToken;
+  if (process.env.CURSOR_SESSION_TOKEN?.trim()) {
+    extraHTTPHeaders["x-cursor-session-token"] = process.env.CURSOR_SESSION_TOKEN.trim();
+  }
+  if (process.env.CURSOR_DISPLAY_NAME?.trim()) {
+    extraHTTPHeaders["x-cursor-display-name"] = process.env.CURSOR_DISPLAY_NAME.trim();
+  }
+  if (process.env.CURSOR_EMAIL?.trim()) {
+    extraHTTPHeaders["x-cursor-email"] = process.env.CURSOR_EMAIL.trim();
+  }
 
   console.log("Opening Cursor report:", reportUrl);
 
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({
     viewport: { width: VIEWPORT_WIDTH, height: 900 },
-    extraHTTPHeaders: internalToken ? { "x-internal-token": internalToken } : undefined,
+    extraHTTPHeaders: Object.keys(extraHTTPHeaders).length ? extraHTTPHeaders : undefined,
   });
 
   try {

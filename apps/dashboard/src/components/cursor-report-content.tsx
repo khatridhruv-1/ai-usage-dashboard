@@ -104,8 +104,12 @@ export function CursorReportContent({ data, variant = "default" }: Props) {
   const quotaTotal = plan.breakdown.total;
 
   const activeDays = data.daily.filter((d) => d.requests > 0);
-  const activeDaysNewestFirst = [...activeDays].reverse();
-  const chartDays = activeDays.length > 14 ? activeDays.slice(-14) : activeDays;
+  const weekDays = data.daily.slice(-7);
+  const weekDaysNewestFirst = [...weekDays].reverse();
+  const weekTotals = weekDays.reduce(
+    (acc, d) => ({ requests: acc.requests + d.requests, tokens: acc.tokens + d.tokens }),
+    { requests: 0, tokens: 0 },
+  );
 
   const todayKey = new Date().toISOString().slice(0, 10);
   const todayUsage = data.daily.find((d) => d.date === todayKey) ?? {
@@ -303,7 +307,7 @@ export function CursorReportContent({ data, variant = "default" }: Props) {
         <h2 className={`font-semibold ${compact ? "text-base" : "text-lg"}`}>Daily usage</h2>
         {!compact && (
           <p className="mb-4 text-sm text-[var(--color-muted)]">
-            Day-by-day breakdown for this billing cycle.
+            Last 7 days of usage.
           </p>
         )}
 
@@ -314,7 +318,7 @@ export function CursorReportContent({ data, variant = "default" }: Props) {
             </p>
             <div className={chartHeight}>
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartDays}>
+                <AreaChart data={weekDays}>
                   <defs>
                     <linearGradient id="dailyTokenGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#10b981" stopOpacity={0.4} />
@@ -359,7 +363,7 @@ export function CursorReportContent({ data, variant = "default" }: Props) {
             </p>
             <div className={chartHeight}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartDays}>
+                <BarChart data={weekDays}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" />
                   <XAxis
                     dataKey="date"
@@ -394,7 +398,7 @@ export function CursorReportContent({ data, variant = "default" }: Props) {
               </tr>
             </thead>
             <tbody>
-              {activeDaysNewestFirst.map((row) => {
+              {weekDaysNewestFirst.map((row) => {
                 const isToday = row.date === todayKey;
                 return (
                   <tr
@@ -421,12 +425,12 @@ export function CursorReportContent({ data, variant = "default" }: Props) {
             </tbody>
             <tfoot>
               <tr className="bg-white/5 font-semibold">
-                <td className={headPad}>Cycle total</td>
+                <td className={headPad}>Week total</td>
                 <td className={`${headPad} text-right tabular-nums`}>
-                  {formatNumber(data.usageEventsCount)}
+                  {formatNumber(weekTotals.requests)}
                 </td>
                 <td className={`${headPad} text-right tabular-nums`}>
-                  {formatNumber(data.totalCycleTokens)}
+                  {formatNumber(weekTotals.tokens)}
                 </td>
               </tr>
             </tfoot>

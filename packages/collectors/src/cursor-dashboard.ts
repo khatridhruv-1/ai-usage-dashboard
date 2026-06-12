@@ -164,9 +164,16 @@ function eventTokens(event: CursorUsageEventRow): number {
   );
 }
 
+export type CursorFetchOptions = {
+  sessionToken?: string;
+  displayName?: string;
+  email?: string;
+};
+
 async function fetchBillingCycleEvents(
   billingCycle: CursorUsageSummary["billingCycle"],
-  userId?: number
+  userId?: number,
+  sessionToken?: string,
 ): Promise<CursorUsageEventRow[]> {
   const now = new Date();
   const startMs = utcDayStart(billingCycle.start);
@@ -189,7 +196,8 @@ async function fetchBillingCycleEvents(
     const res = await cursorSessionRequest<FilteredUsageEventsResponse>(
       "POST",
       EVENTS_PATH,
-      { ...base, page }
+      { ...base, page },
+      sessionToken,
     );
 
     const batch = res.usageEventsDisplay ?? [];
@@ -254,10 +262,13 @@ function buildModelSlices(events: CursorUsageEventRow[]): CursorModelSlice[] {
     }));
 }
 
-export async function fetchCursorLiveDashboard(): Promise<CursorLiveDashboard> {
+export async function fetchCursorLiveDashboard(
+  opts?: CursorFetchOptions,
+): Promise<CursorLiveDashboard> {
+  const sessionToken = opts?.sessionToken?.trim();
   const [summaryRaw, me] = await Promise.all([
-    cursorSessionRequest<unknown>("GET", "/api/usage-summary"),
-    fetchAuthMe(),
+    cursorSessionRequest<unknown>("GET", "/api/usage-summary", undefined, sessionToken),
+    fetchAuthMe(sessionToken),
   ]);
 
   const summary = normalizeUsageSummary(summaryRaw);
@@ -268,14 +279,22 @@ export async function fetchCursorLiveDashboard(): Promise<CursorLiveDashboard> {
   }
 
   const userId = resolveUserId(me);
-  const events = await fetchBillingCycleEvents(summary.billingCycle, userId);
+  const events = await fetchBillingCycleEvents(summary.billingCycle, userId, sessionToken);
   const daily = buildDailySeries(events, summary.billingCycle);
   const models = buildModelSlices(events);
   const totalCycleTokens = events.reduce((s, e) => s + eventTokens(e), 0);
 
+  const user = normalizeUser(me);
+  if (opts?.displayName?.trim()) {
+    user.name = opts.displayName.trim();
+  }
+  if (opts?.email?.trim()) {
+    user.email = opts.email.trim();
+  }
+
   return {
     summary,
-    user: normalizeUser(me),
+    user,
     daily,
     models,
     usageEventsCount: events.length,

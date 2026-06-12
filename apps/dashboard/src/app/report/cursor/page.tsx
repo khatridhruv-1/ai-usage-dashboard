@@ -27,7 +27,15 @@ export default async function CursorReportPage({ searchParams }: Props) {
   }
 
   try {
-    const data = await fetchCursorDashboardServer();
+    const sessionToken = requestHeaders.get("x-cursor-session-token") ?? undefined;
+    const displayName = requestHeaders.get("x-cursor-display-name") ?? undefined;
+    const email = requestHeaders.get("x-cursor-email") ?? undefined;
+
+    const data = await fetchCursorDashboardServer({
+      sessionToken: sessionToken ?? undefined,
+      displayName: displayName ?? undefined,
+      email: email ?? undefined,
+    });
     return (
       <>
         <CursorReportCapture

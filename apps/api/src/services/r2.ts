@@ -41,19 +41,26 @@ function getR2Client() {
   });
 }
 
-function datedPngKey(prefix: string, date: Date) {
+function datedPngKey(prefix: string, date: Date, fileStem: "cursor" | "report") {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
-  return `${prefix}/${y}/${m}/${prefix === "cursor-reports" ? "cursor" : "report"}-${y}-${m}-${d}.png`;
+  return `${prefix}/${y}/${m}/${fileStem}-${y}-${m}-${d}.png`;
 }
 
 function reportKey(date: Date) {
-  return datedPngKey("reports", date);
+  return datedPngKey("reports", date, "report");
 }
 
-function cursorReportKey(date: Date) {
-  return datedPngKey("cursor-reports", date);
+function sanitizeUserKey(userKey: string) {
+  return userKey.replace(/[^a-zA-Z0-9@._-]/g, "_").slice(0, 64);
+}
+
+function cursorReportKey(date: Date, userKey?: string) {
+  const prefix = userKey
+    ? `cursor-reports/${sanitizeUserKey(userKey)}`
+    : "cursor-reports";
+  return datedPngKey(prefix, date, "cursor");
 }
 
 export async function uploadScreenshotToR2(opts: {
@@ -95,6 +102,7 @@ export async function uploadCursorScreenshotToR2(opts: {
   date?: Date;
   base64?: string;
   filePath?: string;
+  userKey?: string;
 }): Promise<string> {
   const client = getR2Client();
   const bucket = process.env.R2_BUCKET_NAME?.trim();
@@ -114,7 +122,7 @@ export async function uploadCursorScreenshotToR2(opts: {
   }
 
   const date = opts.date ?? new Date();
-  const key = cursorReportKey(date);
+  const key = cursorReportKey(date, opts.userKey);
   await client.send(
     new PutObjectCommand({
       Bucket: bucket,

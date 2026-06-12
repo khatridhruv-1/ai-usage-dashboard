@@ -192,22 +192,25 @@ CURSOR_SESSION_TOKEN
 CURSOR_DISPLAY_NAME
 ```
 
-### GitHub Actions secrets (Cursor report workflow)
+### Team mode (GitHub Actions only)
 
-Add these under **Settings → Secrets and variables → Actions**:
+Teammates **fork** the repo, add secrets, and run — no Railway or R2 setup per user. Shared API/dashboard URLs live in `config/team-host.json` (host maintains this).
 
-| Secret | Example |
-|--------|---------|
-| `API_URL` | `https://your-api.railway.app` |
-| `DASHBOARD_URL` | `https://your-dashboard.vercel.app` |
-| `INTERNAL_API_TOKEN` | Same as Railway |
-| `REPORT_ACCESS_TOKEN` | Same as Vercel |
+See **[TEAM_SETUP.md](./TEAM_SETUP.md)** for full host vs teammate steps.
 
-`GOOGLE_CHAT_WEBHOOK_URL` and `R2_*` live on **Railway** (the API uploads the image and posts to Chat).
+**Teammate GitHub secrets:**
 
-Get a Google Chat webhook: open your space → **Apps & integrations** → **Webhooks** → create → copy URL into `GOOGLE_CHAT_WEBHOOK_URL` on Railway.
+| Secret | Required |
+|--------|----------|
+| `INTERNAL_API_TOKEN` | From host |
+| `CURSOR_SESSION_TOKEN` | Your Cursor cookie |
+| `CURSOR_DISPLAY_NAME` | Your name on the report |
+| `CURSOR_EMAIL` | Optional |
+| `GOOGLE_CHAT_WEBHOOK_URL` | Your Chat space |
 
-Workflow file: `.github/workflows/cursor-report.yml` — runs `0 14 * * 1-5` UTC (7:30 PM IST, Mon–Fri). Use **Actions → Cursor Usage Report → Run workflow** to test manually.
+`R2_*` and `GOOGLE_CHAT_WEBHOOK_URL` on Railway are **host-only** (shared R2 bucket, per-user folders).
+
+Workflow: `.github/workflows/cursor-report.yml` — Mon–Fri 7:30 PM IST. Test via **Actions → Cursor Usage Report → Run workflow**.
 
 ## Release Phases
 
