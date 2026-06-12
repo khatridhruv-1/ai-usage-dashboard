@@ -284,12 +284,13 @@ export async function fetchCursorLiveDashboard(
   const models = buildModelSlices(events);
   const totalCycleTokens = events.reduce((s, e) => s + eventTokens(e), 0);
 
-  const user = normalizeUser(me);
-  if (opts?.displayName?.trim()) {
-    user.name = opts.displayName.trim();
-  }
-  if (opts?.email?.trim()) {
-    user.email = opts.email.trim();
+  let user = normalizeUser(me);
+  if (opts?.displayName?.trim() || opts?.email?.trim()) {
+    user = {
+      id: user?.id ?? 0,
+      name: opts?.displayName?.trim() || user?.name || "",
+      email: opts?.email?.trim() || user?.email || "",
+    };
   }
 
   return {
