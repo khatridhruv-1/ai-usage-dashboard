@@ -18,7 +18,6 @@ export default async function CursorReportPage({ searchParams }: Props) {
         <div
           className="report-failed"
           data-error="Unauthorized — REPORT_ACCESS_TOKEN mismatch between GitHub Actions and dashboard"
-          aria-hidden
         />
       </div>
     );
@@ -29,7 +28,7 @@ export default async function CursorReportPage({ searchParams }: Props) {
     return (
       <>
         <CursorReportCapture data={data} />
-        <div className="report-ready report-ready-marker" aria-hidden />
+        <div className="report-ready report-ready-marker" />
       </>
     );
   } catch (err) {
@@ -37,7 +36,7 @@ export default async function CursorReportPage({ searchParams }: Props) {
     return (
       <div className="report-cursor-capture flex items-center justify-center p-8">
         <p className="text-red-300">{message}</p>
-        <div className="report-failed" data-error={message} aria-hidden />
+        <div className="report-failed" data-error={message} />
       </div>
     );
   }

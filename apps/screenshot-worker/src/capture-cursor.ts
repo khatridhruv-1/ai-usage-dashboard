@@ -52,6 +52,7 @@ export async function captureCursorReport(): Promise<string> {
 
     const status = await page.waitForSelector(".report-ready, .report-failed", {
       timeout: 120_000,
+      state: "attached",
     });
     const className = (await status.getAttribute("class")) ?? "";
     if (className.includes("report-failed")) {
