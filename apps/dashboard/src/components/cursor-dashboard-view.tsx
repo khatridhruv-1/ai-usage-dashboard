@@ -8,11 +8,11 @@ import {
   formatShortDate,
   membershipLabel,
 } from "@/lib/cursor-api";
+import { getApiBaseUrlClient } from "@/lib/env";
 import { CursorReportContent } from "./cursor-report-content";
 import { Sidebar } from "./sidebar";
 
 const REFRESH_MS = 5 * 60 * 1000;
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export function CursorDashboardView() {
   const [data, setData] = useState<CursorLiveDashboard | null>(null);
@@ -53,7 +53,7 @@ export function CursorDashboardView() {
     setCapturing(true);
     setScreenshotError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/cursor/screenshot`);
+      const res = await fetch(`${getApiBaseUrlClient()}/api/cursor/screenshot`);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? `Screenshot failed (${res.status})`);

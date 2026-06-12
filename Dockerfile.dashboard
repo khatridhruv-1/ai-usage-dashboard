@@ -18,6 +18,10 @@ COPY packages ./packages
 COPY apps/dashboard ./apps/dashboard
 
 RUN npm exec --workspace=@repo/db prisma generate
+
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN npm run build --workspace=dashboard
 
 ENV HOSTNAME=0.0.0.0

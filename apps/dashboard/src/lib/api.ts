@@ -1,12 +1,11 @@
 import type { DailyUsageResponse } from "@repo/analytics";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+import { getApiBaseUrl } from "@/lib/env";
 
 export async function fetchDailyUsage(date?: string): Promise<DailyUsageResponse> {
   const params = new URLSearchParams();
   if (date) params.set("date", date);
 
-  const url = `${API_BASE}/api/usage/daily${params.size ? `?${params}` : ""}`;
+  const url = `${getApiBaseUrl()}/api/usage/daily${params.size ? `?${params}` : ""}`;
   const res = await fetch(url, { next: { revalidate: 60 } });
 
   if (!res.ok) {
