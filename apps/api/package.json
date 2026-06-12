@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "npm exec --workspace=@repo/db prisma generate",
-    "start": "tsx src/index.ts"
+    "start": "npm exec --workspace=@repo/db prisma generate && node --import tsx src/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.826.0",

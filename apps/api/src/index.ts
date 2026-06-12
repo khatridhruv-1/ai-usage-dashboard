@@ -24,8 +24,10 @@ app.use("/api/google-chat", googleChatRouter);
 app.use("/api/sync", syncRouter);
 app.use("/api/cursor", cursorRouter);
 
-app.listen(PORT, () => {
-  console.log(`API listening on http://localhost:${PORT}`);
+const HOST = process.env.HOST ?? "0.0.0.0";
+
+app.listen(PORT, HOST, () => {
+  console.log(`API listening on http://${HOST}:${PORT}`);
   startSyncScheduler();
-  void runStartupSync();
+  setTimeout(() => void runStartupSync(), 2000);
 });
