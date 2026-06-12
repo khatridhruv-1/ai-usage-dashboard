@@ -39,6 +39,7 @@ jobs:
           API_URL: ${{ steps.host.outputs.api_url }}
           DASHBOARD_URL: ${{ steps.host.outputs.dashboard_url }}
           INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
+          REPORT_ACCESS_TOKEN: ${{ secrets.REPORT_ACCESS_TOKEN }}
           CURSOR_SESSION_TOKEN: ${{ secrets.CURSOR_SESSION_TOKEN }}
           CURSOR_DISPLAY_NAME: ${{ secrets.CURSOR_DISPLAY_NAME }}
           CURSOR_EMAIL: ${{ secrets.CURSOR_EMAIL }}

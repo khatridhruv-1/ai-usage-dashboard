@@ -16,11 +16,24 @@ One person (**host**) runs the shared API + dashboard + R2. Everyone else only f
 }
 ```
 
-5. Share with teammates (privately):
+5. On Railway **dashboard** service, set `INTERNAL_API_TOKEN` to the **same value** as the API (Playwright sends this header to open `/report/cursor`). Optional: `REPORT_ACCESS_TOKEN` as a URL fallback.
+
+6. Share with teammates (privately):
    - `INTERNAL_API_TOKEN` (same value as Railway api)
    - Link to fork this repo
 
 You do **not** need `CURSOR_SESSION_TOKEN` on Railway unless you use the live dashboard yourself.
+
+### Host GitHub secrets (if you run reports from your repo)
+
+| Secret | Required |
+|--------|----------|
+| `INTERNAL_API_TOKEN` | Yes — must match Railway **api** and **dashboard** |
+| `CURSOR_SESSION_TOKEN` | Yes |
+| `CURSOR_DISPLAY_NAME` | Yes |
+| `GOOGLE_CHAT_WEBHOOK_URL` | Yes |
+| `REPORT_ACCESS_TOKEN` | Optional — use if set on Railway dashboard |
+| `CURSOR_EMAIL` | Optional |
 
 ---
 

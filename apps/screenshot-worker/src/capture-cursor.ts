@@ -63,10 +63,18 @@ export async function captureCursorReport(): Promise<string> {
   try {
     await page.goto(reportUrl, { waitUntil: "load", timeout: 120_000 });
 
-    const status = await page.waitForSelector(".report-ready, .report-failed", {
-      timeout: 120_000,
-      state: "attached",
-    });
+    let status;
+    try {
+      status = await page.waitForSelector(".report-ready, .report-failed", {
+        timeout: 120_000,
+        state: "attached",
+      });
+    } catch {
+      const snippet = (await page.locator("body").innerText()).slice(0, 500);
+      throw new Error(
+        `Report page did not finish loading within 120s. URL: ${reportUrl}\nPage text: ${snippet || "(empty)"}`,
+      );
+    }
     const className = (await status.getAttribute("class")) ?? "";
     if (className.includes("report-failed")) {
       const error =
