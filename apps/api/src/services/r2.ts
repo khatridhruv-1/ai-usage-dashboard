@@ -26,9 +26,9 @@ function r2NotConfiguredError(): Error {
 }
 
 function getR2Client() {
-  const accountId = process.env.R2_ACCOUNT_ID;
-  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+  const accountId = process.env.R2_ACCOUNT_ID?.trim();
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID?.trim();
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY?.trim();
 
   if (!accountId || !accessKeyId || !secretAccessKey) {
     return null;
@@ -62,8 +62,8 @@ export async function uploadScreenshotToR2(opts: {
   filePath?: string;
 }): Promise<string> {
   const client = getR2Client();
-  const bucket = process.env.R2_BUCKET_NAME;
-  const publicBase = process.env.R2_PUBLIC_URL;
+  const bucket = process.env.R2_BUCKET_NAME?.trim();
+  const publicBase = process.env.R2_PUBLIC_URL?.trim();
 
   if (!client || !bucket || !publicBase) {
     throw r2NotConfiguredError();
@@ -97,8 +97,8 @@ export async function uploadCursorScreenshotToR2(opts: {
   filePath?: string;
 }): Promise<string> {
   const client = getR2Client();
-  const bucket = process.env.R2_BUCKET_NAME;
-  const publicBase = process.env.R2_PUBLIC_URL;
+  const bucket = process.env.R2_BUCKET_NAME?.trim();
+  const publicBase = process.env.R2_PUBLIC_URL?.trim();
 
   if (!client || !bucket || !publicBase) {
     throw r2NotConfiguredError();
