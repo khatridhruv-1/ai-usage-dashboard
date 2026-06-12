@@ -36,7 +36,7 @@ export function CursorReportCapture({ data }: Props) {
 
       <CursorReportContent data={data} variant="capture" />
 
-      {chartsReady && <div className="report-ready report-ready-marker" aria-hidden />}
+      {chartsReady && <div className="report-charts-ready" aria-hidden />}
     </div>
   );
 }

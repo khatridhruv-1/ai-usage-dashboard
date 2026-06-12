@@ -48,9 +48,21 @@ export async function captureCursorReport(): Promise<string> {
   });
 
   try {
-    await page.goto(reportUrl, { waitUntil: "networkidle", timeout: 120_000 });
-    await page.waitForSelector(".report-ready", { timeout: 60_000 });
-    await page.waitForTimeout(500);
+    await page.goto(reportUrl, { waitUntil: "load", timeout: 120_000 });
+
+    const status = await page.waitForSelector(".report-ready, .report-failed", {
+      timeout: 120_000,
+    });
+    const className = (await status.getAttribute("class")) ?? "";
+    if (className.includes("report-failed")) {
+      const error =
+        (await status.getAttribute("data-error")) ??
+        (await page.locator(".report-cursor-capture").textContent()) ??
+        "Unknown report page error";
+      throw new Error(error.trim());
+    }
+    // Allow Recharts client components to hydrate and finish layout
+    await page.waitForTimeout(2_500);
 
     await page.screenshot({
       path: outputPath,

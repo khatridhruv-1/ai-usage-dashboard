@@ -15,18 +15,29 @@ export default async function CursorReportPage({ searchParams }: Props) {
     return (
       <div className="report-cursor-capture flex items-center justify-center p-8">
         <p className="text-[var(--color-muted)]">Unauthorized — invalid report token</p>
+        <div
+          className="report-failed"
+          data-error="Unauthorized — REPORT_ACCESS_TOKEN mismatch between GitHub Actions and dashboard"
+          aria-hidden
+        />
       </div>
     );
   }
 
   try {
     const data = await fetchCursorDashboardServer();
-    return <CursorReportCapture data={data} />;
+    return (
+      <>
+        <CursorReportCapture data={data} />
+        <div className="report-ready report-ready-marker" aria-hidden />
+      </>
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to load Cursor report";
     return (
       <div className="report-cursor-capture flex items-center justify-center p-8">
         <p className="text-red-300">{message}</p>
+        <div className="report-failed" data-error={message} aria-hidden />
       </div>
     );
   }
