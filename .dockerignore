@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+.turbo
+.git
+*.log
+.env
+**/.env
+**/.env.local
+daily-report.png
+cursor-report.png
+apps/screenshot-worker/cursor-report.png

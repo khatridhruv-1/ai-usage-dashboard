@@ -1,0 +1,25 @@
+FROM node:20-bookworm-slim
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/dashboard/package.json ./apps/dashboard/
+COPY apps/screenshot-worker/package.json ./apps/screenshot-worker/
+COPY packages/analytics/package.json ./packages/analytics/
+COPY packages/collectors/package.json ./packages/collectors/
+COPY packages/db/package.json ./packages/db/
+COPY packages/ui/package.json ./packages/ui/
+
+RUN npm ci
+
+COPY tsconfig.json ./
+COPY packages ./packages
+COPY apps/api ./apps/api
+
+RUN npm exec --workspace=@repo/db prisma generate
+
+ENV HOST=0.0.0.0
+ENV NODE_ENV=production
+
+CMD ["npm", "run", "start", "--workspace=api"]

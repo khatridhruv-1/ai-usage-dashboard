@@ -12,10 +12,10 @@
     "dev": "prisma generate --watch"
   },
   "dependencies": {
-    "@prisma/client": "^6.8.2"
+    "@prisma/client": "^6.8.2",
+    "prisma": "^6.8.2"
   },
   "devDependencies": {
-    "prisma": "^6.8.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }

@@ -1,33 +1,28 @@
 import "dotenv/config";
-import cors from "cors";
 import express from "express";
-import { usageRouter } from "./routes/usage";
-import { reportRouter } from "./routes/report";
-import { googleChatRouter } from "./routes/google-chat";
-import { syncRouter } from "./routes/sync";
-import { cursorRouter } from "./routes/cursor";
-import { runStartupSync, startSyncScheduler } from "./services/scheduler";
+
+process.on("uncaughtException", (err) => {
+  console.error("[api] uncaughtException:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("[api] unhandledRejection:", err);
+});
 
 const app = express();
 const PORT = Number(process.env.PORT ?? process.env.API_PORT ?? 4000);
-
-app.use(cors({ origin: process.env.CORS_ORIGIN?.split(",") ?? true }));
-app.use(express.json());
+const HOST = process.env.HOST ?? "0.0.0.0";
 
 app.get("/health", (_req, res) => {
   res.json({ ok: true, service: "ai-usage-api" });
 });
 
-app.use("/api/usage", usageRouter);
-app.use("/api/report", reportRouter);
-app.use("/api/google-chat", googleChatRouter);
-app.use("/api/sync", syncRouter);
-app.use("/api/cursor", cursorRouter);
-
-const HOST = process.env.HOST ?? "0.0.0.0";
-
 app.listen(PORT, HOST, () => {
   console.log(`API listening on http://${HOST}:${PORT}`);
-  startSyncScheduler();
-  setTimeout(() => void runStartupSync(), 2000);
+
+  import("./bootstrap.js")
+    .then(({ bootstrap }) => bootstrap(app))
+    .catch((err) => {
+      console.error("[api] Failed to load routes (health still works):", err);
+    });
 });
