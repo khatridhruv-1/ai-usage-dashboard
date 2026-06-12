@@ -22,9 +22,9 @@ if [ "$MODE" = "cursor" ]; then
     echo "Skip: weekend in Asia/Kolkata (dow=$DOW)"
     exit 1
   fi
-  # Nominal ~7:35 PM IST (cron 14:05 UTC); allow delayed queue starts
-  if [ "$TOTAL" -lt $((19 * 60 + 20)) ] || [ "$TOTAL" -gt $((20 * 60 + 15)) ]; then
-    echo "Skip: outside 7:20 PM–8:15 PM IST window (now ${H}:${M} IST)"
+  # TEMP TEST: ~9:35 PM IST (cron 15:35 UTC); allow delayed queue starts
+  if [ "$TOTAL" -lt $((21 * 60 + 20)) ] || [ "$TOTAL" -gt $((22 * 60 + 15)) ]; then
+    echo "Skip: outside 9:20 PM–10:15 PM IST window (now ${H}:${M} IST)"
     exit 1
   fi
 elif [ "$MODE" = "daily" ]; then
