@@ -1,6 +1,13 @@
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile.dashboard"
+watchPatterns = [
+  "apps/dashboard/**",
+  "packages/**",
+  "Dockerfile.dashboard",
+  "package.json",
+  "package-lock.json",
+]
 
 [deploy]
 healthcheckPath = "/"
